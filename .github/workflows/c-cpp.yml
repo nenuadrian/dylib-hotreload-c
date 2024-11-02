@@ -1,17 +1,26 @@
-name: C/C++ CI
+name: Build Dynamic Library
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: build
-      run: ./dynamic.sh
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install g++
+        run: sudo apt-get update && sudo apt-get install -y g++
+
+      - name: Build dynamic library
+        run: g++ -dynamiclib -o libdynamic.dylib dynamic.cpp
+
+      - name: Verify dynamic library
+        run: file libdynamic.dylib
